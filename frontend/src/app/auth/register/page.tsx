@@ -1,0 +1,14 @@
+import React from 'react'
+import Register from '@/components/auth/Register'
+
+
+
+function RegisterPage() {
+  return (
+    <div className="md:ml-64">
+        <Register />
+    </div>
+  )
+}
+
+export default RegisterPage
