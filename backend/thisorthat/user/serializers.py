@@ -8,7 +8,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password', 'token']
+        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'password', 'token']
         read_only_fields = ['id']
         extra_kwargs = {
             'password': {'write_only': True}
@@ -33,14 +33,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     votes = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ['user', 'created_at', 'posts', 'votes']
+        fields = ['id', 'user', 'created_at', 'posts', 'votes', 'created_at']
         read_only_fields = ['id', 'created_at']
 
 
     def get_posts(self, obj):
         posts = obj.posts.all()
-        return [{'id': post.id, 'question': post.question, 'option1': post.option1.text, 'option2': post.option2.text, 'author': post.author.user.username, 'author_id': post.author.id} for post in posts]
+        return [{'id': post.id, 'question': post.question, 'option1': post.option1.text, 'option1_votes': post.option1.votes.count(), 'option2': post.option2.text, 'option2_votes': post.option2.votes.count(), 'author': post.author.user.username, 'author_id': post.author.id} for post in posts]
 
     def get_votes(self, obj):
         votes = obj.votes.all()
-        return [{'id': vote.id, 'text': vote.text } for vote in votes]
+        return [{'id': vote.id, 'text': vote.text, 'question_id': vote.post.id } for vote in votes]

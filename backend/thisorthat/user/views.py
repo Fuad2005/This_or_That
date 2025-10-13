@@ -4,7 +4,7 @@ from .models import User, Profile
 from .serializers import RegisterSerializer, ProfileSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, filters
 
 # Create your views here.
 class RegisterAV(RetrieveAPIView, CreateAPIView):
@@ -26,6 +26,8 @@ class GetProfile(RetrieveAPIView):
 class GetAllProfiles(ListAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__username__icontains', 'user__first_name__icontains', 'user__last_name__icontains']
 
 
 @api_view(["POST"])

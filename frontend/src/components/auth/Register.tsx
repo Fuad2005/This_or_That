@@ -2,12 +2,16 @@
 
 import React from 'react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation';
+import { AppContext } from '@/app/appInitializer';
 
 
 
 
 function Register() {
     const [errMsg, setErrMsg] = React.useState('');
+    const router = useRouter()
+    const {setTokenCheck} = React.useContext(AppContext)!
 
     const handleLogin = React.useCallback((e: React.FormEvent) => {
         e.preventDefault();
@@ -26,14 +30,15 @@ function Register() {
             }).then(res => {
                 console.log(res);
                 localStorage.setItem('token', res.data.token);
-                window.location.href = '/';
+                setTokenCheck(prev => prev + 1);
+                router.push('/');
             }).catch(err => {
                 console.log(err);
                 setErrMsg(JSON.stringify(err.response.data))
             })
         }
         console.log(data);
-    }, [])
+    }, [router, setTokenCheck])
 
 
     const formChange = React.useCallback(() => {
